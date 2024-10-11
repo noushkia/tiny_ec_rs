@@ -10,8 +10,13 @@ pub struct Curve {
 }
 
 impl Curve {
+    pub fn new(a: BigInt, b: BigInt, field: SubGroup, name: String) -> Self {
+        Curve { a, b, field, name }
+    }
+
     fn mod_pow(base: &BigInt, exponent: usize, modulus: &BigInt) -> BigInt {
-        base.modpow(&(BigInt::from(exponent)), &modulus)
+        let res = base.modpow(&(BigInt::from(exponent)), &modulus);
+        return res;
     }
 
     pub fn is_singular(&self) -> bool {

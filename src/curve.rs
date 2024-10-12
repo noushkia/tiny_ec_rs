@@ -2,6 +2,7 @@ use num_bigint::BigInt;
 use num_traits::Zero;
 use std::fmt;
 
+#[derive(Clone)]
 pub struct Curve {
     pub a: BigInt,
     pub b: BigInt,
@@ -11,12 +12,16 @@ pub struct Curve {
 
 impl Curve {
     pub fn new(a: BigInt, b: BigInt, field: SubGroup, name: String) -> Self {
-        Curve { a, b, field, name }
+        Curve {
+            a,
+            b,
+            field,
+            name,
+        }
     }
 
     fn mod_pow(base: &BigInt, exponent: usize, modulus: &BigInt) -> BigInt {
-        let res = base.modpow(&(BigInt::from(exponent)), &modulus);
-        return res;
+        base.modpow(&(BigInt::from(exponent)), &modulus)
     }
 
     pub fn is_singular(&self) -> bool {

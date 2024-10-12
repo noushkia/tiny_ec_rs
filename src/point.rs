@@ -1,16 +1,16 @@
-use std::fmt;
 use crate::curve::Curve;
-use num_bigint::BigInt;
+use num_bigint::{BigInt, BigUint};
 use num_traits::{Euclid, Zero};
+use std::fmt;
 
 #[derive(Clone)]
-pub struct Point<'a> {
-    curve: &'a Curve,
+pub struct Point {
+    curve: Curve,
     x: BigInt,
     y: BigInt
 }
 
-impl<'a> Point<'a> {
+impl<'a> Point {
 
     pub fn new(curve: &'a Curve, x: BigInt, y: BigInt) -> Option<Self> {
         let on_curve = curve.on_curve(&x, &y);
@@ -34,7 +34,7 @@ impl<'a> Point<'a> {
         }
     }
 
-    pub fn add(this: &Point<'a>, other: &Point<'a>) -> Option<Point<'a>> {
+    pub fn add(this: &Point, other: &Point) -> Option<Point> {
         if this.curve != other.curve {
             eprintln!("Cannot add points belonging to different curves");
             return None;
@@ -65,18 +65,41 @@ impl<'a> Point<'a> {
 
         Point::new(&this.curve, x_r, y_r)
     }
+
+    pub fn mul_double_and_add(p: &Point, mut n: BigInt) -> Option<Point> {
+        let mut q = p.clone();
+        let mut r = Point::inf(&p.curve);
+        while n > BigInt::zero() {
+            if &n % BigInt::from(2) == BigInt::from(1) {
+                r = Point::add(&r, &q).expect("Error adding points!");
+            }
+            q = Point::add(&q, &q).expect("Error doubling point q!");
+            n /= 2;
+        }
+        Some(r)
+    }
 }
 
-impl PartialEq for Point<'_> {
+impl PartialEq for Point {
     fn eq(&self, other: &Self) -> bool {
         self.x == other.x && self.y == other.y && self.curve == other.curve
     }
 }
 
-impl Eq for Point<'_> {}
+impl Eq for Point {}
 
-impl fmt::Debug for Point<'_> {
+impl fmt::Debug for Point {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Point {{ x: {}, y: {} }}", self.x, self.y)
+    }
+}
+
+impl fmt::Display for Point {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "{},{}",
+            self.x, self.y
+        )
     }
 }

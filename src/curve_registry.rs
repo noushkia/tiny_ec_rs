@@ -30,6 +30,14 @@ pub fn get_curve(name: &str) -> Result<Curve, &'static str> {
             n: BigInt::from_str_radix("c302f41d932a36cda7a3462f9e9e916b5be8f1029ac4acc1", 16).unwrap(),
             h: BigInt::from_str_radix("1", 16).unwrap(),
         },
+        "secp192r1" => CurveParams {
+            p: BigInt::from_str_radix("fffffffffffffffffffffffffffffffeffffffffffffffff", 16).unwrap(),
+            a: BigInt::from_str_radix("fffffffffffffffffffffffffffffffefffffffffffffffc", 16).unwrap(),
+            b: BigInt::from_str_radix("64210519e59c80e70fa7e9ab72243049feb8deecc146b9b1", 16).unwrap(),
+            g: (BigInt::from_str_radix("188da80eb03090f67cbf20eb43a18800f4ff0afd82ff1012", 16).unwrap(), BigInt::from_str_radix("07192b95ffc8da78631011ed6b24cdd573f977a11e794811", 16).unwrap()),
+            n: BigInt::from_str_radix("ffffffffffffffffffffffff99def836146bc9b1b4d22831", 16).unwrap(),
+            h: BigInt::from_str_radix("1", 16).unwrap(),
+        },
         _ => return Err("Unknown elliptic curve name"),
     };
 

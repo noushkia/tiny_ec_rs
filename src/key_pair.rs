@@ -1,6 +1,6 @@
 use crate::curve::Curve;
 use crate::point::Point;
-use num_bigint::{BigInt, RandBigInt};
+use num_bigint::BigInt;
 
 pub struct Keypair {
     pub curve: Curve,

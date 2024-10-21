@@ -3,6 +3,8 @@ use num_traits::Zero;
 use std::fmt;
 
 #[derive(Clone)]
+// Simple Weierstrass curve structure
+// y^2 = x^3 + a*x + b
 pub struct Curve {
     pub a: BigInt,
     pub b: BigInt,
@@ -53,10 +55,10 @@ impl Eq for Curve {}
 
 #[derive(Clone)]
 pub struct SubGroup {
-    pub p: BigInt,
-    pub g: (BigInt, BigInt),
-    pub n: BigInt,
-    pub h: BigInt,
+    pub p: BigInt,              // Prime field of the subgroup curve points
+    pub g: (BigInt, BigInt),    // Generator point coordinates
+    pub n: BigInt,              // Order of the subgroup
+    pub h: BigInt,              // Cofactor of the subgroup i.e. h = n / r where r is the order of the subgroup
 }
 
 impl fmt::Display for SubGroup {

@@ -30,10 +30,8 @@ mod tests {
         };
         let curve = Curve::new(BigInt::from(2), BigInt::from(3), field, "testCurve".to_string());
 
-        let p1 = Point::new(&curve, BigInt::from(22), BigInt::from(5)).unwrap();
-
-        // Assuming your implementation raises a Result or Option for invalid points
         let result = Point::new(&curve, BigInt::from(94), BigInt::from(31));
+
         assert!(result.is_none());
     }
 
@@ -66,6 +64,7 @@ mod tests {
 
         let p1 = Point::new(&curve, BigInt::from(24), BigInt::from(2)).unwrap();
         let expected = Point::new(&curve, BigInt::from(65), BigInt::from(65)).unwrap();
+
         assert_eq!(expected, Point::add(&p1, &p1).unwrap());
     }
 
@@ -82,6 +81,39 @@ mod tests {
         let p1 = Point::new(&curve, BigInt::from(12), BigInt::from(3)).unwrap();
         let p2 = Point::new(&curve, BigInt::from(12), BigInt::from(94)).unwrap();
         let inf = Point::inf(&curve);
+
         assert_eq!(inf, Point::add(&p1, &p2).unwrap());
+    }
+
+    #[test]
+    fn test_double_and_add() {
+        let field = SubGroup {
+            p: BigInt::from(9739),
+            g: (BigInt::from(1), BigInt::from(2)),
+            n: BigInt::from(5),
+            h: BigInt::from(1),
+        };
+        let curve = Curve::new(BigInt::from(497), BigInt::from(1768), field, "testCurve".to_string());
+
+        let x = Point::new(&curve, BigInt::from(5323), BigInt::from(5438)).unwrap();
+        let expected =  Point::new(&curve, BigInt::from(1089), BigInt::from(6931)).unwrap();
+        assert_eq!(expected, Point::mul_double_and_add(&x, BigInt::from(1337)).unwrap())
+    }
+
+    #[test]
+    fn test_montgomery() {
+        let field = SubGroup {
+            p: BigInt::from(9739),
+            g: (BigInt::from(1), BigInt::from(2)),
+            n: BigInt::from(5),
+            h: BigInt::from(1),
+        };
+        let curve = Curve::new(BigInt::from(497), BigInt::from(1768), field, "testCurve".to_string());
+
+        let expected =  Point::new(&curve, BigInt::from(1089), BigInt::from(6931)).unwrap();
+        let x = Point::new(&curve, BigInt::from(5323), BigInt::from(5438)).unwrap();
+        let k = BigInt::from(1337);
+        let n = k.bits() as usize;
+        assert_eq!(expected, Point::mul_montgomery(&x, k, n).unwrap())
     }
 }

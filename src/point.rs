@@ -1,18 +1,18 @@
 use crate::curve::Curve;
-use num_bigint::{BigInt, BigUint};
-use num_traits::{Euclid, Zero};
+use crate::utils::modsqrt;
+use num_bigint::BigInt;
+use num_traits::{Euclid, ToPrimitive, Zero};
 use std::fmt;
 
 #[derive(Clone)]
 pub struct Point {
     curve: Curve,
-    x: BigInt,
-    y: BigInt
+    pub x: BigInt,
+    pub y: BigInt,
 }
 
-impl<'a> Point {
-
-    pub fn new(curve: &'a Curve, x: BigInt, y: BigInt) -> Option<Self> {
+impl Point {
+    pub fn new(curve: & Curve, x: BigInt, y: BigInt) -> Option<Self> {
         let on_curve = curve.on_curve(&x, &y);
         if !on_curve {
             eprintln!("Point ({}, {}) is not on curve \"{}\"", x, y, curve.name);
@@ -21,7 +21,7 @@ impl<'a> Point {
         Some(Point {
             x,
             y,
-            curve: curve.clone()
+            curve: curve.clone(),
         })
     }
 
@@ -30,7 +30,7 @@ impl<'a> Point {
         Point {
             curve: curve.clone(),
             x: BigInt::from(0),
-            y: BigInt::from(0)
+            y: BigInt::from(0),
         }
     }
 
@@ -46,7 +46,7 @@ impl<'a> Point {
             return Some(this.clone());
         }
 
-        if this.x == other.x &&  (&other.y + &this.y) % &other.curve.field.p == BigInt::zero() {
+        if this.x == other.x && (&other.y + &this.y) % &other.curve.field.p == BigInt::zero() {
             return Some(Point::inf(&this.curve));
         }
 
@@ -77,6 +77,41 @@ impl<'a> Point {
             n /= 2;
         }
         Some(r)
+    }
+
+    // n: number of binary bits in k
+    pub fn mul_montgomery(p: &Point, k: BigInt, n: usize) -> Option<Point> {
+        let k_bin = k.to_radix_le(2).1; // todo: what about negatives?
+        if k_bin[0] == 0 {
+            eprintln!("k's msb must be 1!");
+            return None
+        }
+        let mut r0 = p.clone();
+        let mut r1 = Self::add(p, p).expect("Error doubling P!");
+        for i in (0..n-1).rev() {
+            if k_bin[i] == 0 {
+                r1 = Self::add(&r0, &r1).expect("Error adding R0 and R1!");
+                r0 = Self::add(&r0, &r0).expect("Error doubling R0!");
+            } else {
+                r0 = Self::add(&r0, &r1).expect("Error adding R0 and R1!");
+                r1 = Self::add(&r1, &r1).expect("Error doubling R1!");
+            }
+        }
+        Some(r0)
+    }
+
+    pub fn compress(&self) -> (BigInt, u8) {
+        (self.x.clone(), (self.y.clone() % BigInt::from(2)).to_u8().expect("Error checking the parity"))
+    }
+
+    pub fn decompress(curve: &Curve, x: BigInt, is_odd: u8) -> Point {
+        let sqrt = modsqrt(&(&x.pow(3) + &curve.a * &x + &curve.b), &curve.field.p).expect("Error calculating the modular s");
+        let y = if is_odd == 1 { // todo: check is odd direction
+            sqrt
+        } else {
+            &curve.field.p - sqrt
+        };
+        Point::new(curve, x, y).unwrap()
     }
 }
 

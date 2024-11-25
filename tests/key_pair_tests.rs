@@ -17,7 +17,11 @@ mod tests {
         let curve = tiny_ec::curve_registry::get_curve("brainpoolP160r1").unwrap();
         let private_key = BigInt::from(1337);
         let keypair = Keypair::new(&curve, Some(&private_key), None).unwrap();
-        let expected_pub_key = Point::mul_double_and_add(&Point::new(&curve, curve.field.g.0.clone(), curve.field.g.1.clone()).unwrap(), private_key).unwrap();
+        let expected_pub_key = Point::mul_double_and_add(
+            &Point::new(&curve, curve.field.g.0.clone(), curve.field.g.1.clone()).unwrap(),
+            private_key,
+        )
+        .unwrap();
         assert_eq!(keypair.public_key, expected_pub_key);
     }
 }

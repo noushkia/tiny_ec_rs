@@ -5,17 +5,42 @@ mod tests {
 
     #[test]
     fn test_curve_is_singular() {
-        let field = SubGroup { p: BigInt::from(23), g: (BigInt::from(1), BigInt::from(2)), n: BigInt::from(5), h: BigInt::from(1) };
-        let curve1 = Curve { a: BigInt::from(0), b: BigInt::from(0), field: field.clone(), name: String::from("test_curve") };
+        let field = SubGroup {
+            p: BigInt::from(23),
+            g: (BigInt::from(1), BigInt::from(2)),
+            n: BigInt::from(5),
+            h: BigInt::from(1),
+        };
+        let curve1 = Curve {
+            a: BigInt::from(0),
+            b: BigInt::from(0),
+            field: field.clone(),
+            name: String::from("test_curve"),
+        };
         assert!(curve1.is_singular());
 
-        let curve2 = Curve { a: BigInt::from(-3), b: BigInt::from(2), field: field.clone(), name: String::from("test_curve") };
+        let curve2 = Curve {
+            a: BigInt::from(-3),
+            b: BigInt::from(2),
+            field: field.clone(),
+            name: String::from("test_curve"),
+        };
         assert!(curve2.is_singular());
 
-        let curve3 = Curve { a: BigInt::from(-3), b: BigInt::from(1), field: field.clone(), name: String::from("test_curve") };
+        let curve3 = Curve {
+            a: BigInt::from(-3),
+            b: BigInt::from(1),
+            field: field.clone(),
+            name: String::from("test_curve"),
+        };
         assert!(!curve3.is_singular());
 
-        let curve4 = Curve { a: BigInt::from(2), b: BigInt::from(2), field, name: String::from("test_curve") };
+        let curve4 = Curve {
+            a: BigInt::from(2),
+            b: BigInt::from(2),
+            field,
+            name: String::from("test_curve"),
+        };
         assert!(!curve4.is_singular());
     }
 }

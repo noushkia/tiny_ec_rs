@@ -14,12 +14,7 @@ pub struct Curve {
 
 impl Curve {
     pub fn new(a: BigInt, b: BigInt, field: SubGroup, name: String) -> Self {
-        Curve {
-            a,
-            b,
-            field,
-            name,
-        }
+        Curve { a, b, field, name }
     }
 
     fn mod_pow(base: &BigInt, exponent: usize, modulus: &BigInt) -> BigInt {
@@ -27,11 +22,19 @@ impl Curve {
     }
 
     pub fn is_singular(&self) -> bool {
-        (4 * Self::mod_pow(&self.a, 3, &self.field.p) + 27 * Self::mod_pow(&self.b, 2, &self.field.p)) % &self.field.p == BigInt::zero()
+        (4 * Self::mod_pow(&self.a, 3, &self.field.p)
+            + 27 * Self::mod_pow(&self.b, 2, &self.field.p))
+            % &self.field.p
+            == BigInt::zero()
     }
 
     pub fn on_curve(&self, x: &BigInt, y: &BigInt) -> bool {
-        (Self::mod_pow(&y, 2, &self.field.p) - Self::mod_pow(&x, 3, &self.field.p) - &self.a * x - &self.b) % &self.field.p == BigInt::zero()
+        (Self::mod_pow(&y, 2, &self.field.p)
+            - Self::mod_pow(&x, 3, &self.field.p)
+            - &self.a * x
+            - &self.b)
+            % &self.field.p
+            == BigInt::zero()
     }
 }
 
@@ -55,10 +58,10 @@ impl Eq for Curve {}
 
 #[derive(Clone)]
 pub struct SubGroup {
-    pub p: BigInt,              // Prime field of the subgroup curve points
-    pub g: (BigInt, BigInt),    // Generator point coordinates
-    pub n: BigInt,              // Order of the subgroup
-    pub h: BigInt,              // Cofactor of the subgroup i.e. h = n / r where r is the order of the subgroup
+    pub p: BigInt,           // Prime field of the subgroup curve points
+    pub g: (BigInt, BigInt), // Generator point coordinates
+    pub n: BigInt,           // Order of the subgroup
+    pub h: BigInt, // Cofactor of the subgroup i.e. h = n / r where r is the order of the subgroup
 }
 
 impl fmt::Display for SubGroup {

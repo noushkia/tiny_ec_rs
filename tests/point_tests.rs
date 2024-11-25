@@ -6,8 +6,18 @@ mod tests {
 
     #[test]
     fn test_addition_on_curve() {
-        let field = SubGroup { p: BigInt::from(97), g: (BigInt::from(1), BigInt::from(2)), n: BigInt::from(5), h: BigInt::from(1) };
-        let curve = Curve::new(BigInt::from(2), BigInt::from(3), field, "testCurve".to_string());
+        let field = SubGroup {
+            p: BigInt::from(97),
+            g: (BigInt::from(1), BigInt::from(2)),
+            n: BigInt::from(5),
+            h: BigInt::from(1),
+        };
+        let curve = Curve::new(
+            BigInt::from(2),
+            BigInt::from(3),
+            field,
+            "testCurve".to_string(),
+        );
 
         let p1 = Point::new(&curve, BigInt::from(22), BigInt::from(5)).unwrap();
         let p2 = Point::new(&curve, BigInt::from(95), BigInt::from(31)).unwrap();
@@ -26,9 +36,14 @@ mod tests {
             p: BigInt::from(97),
             g: (BigInt::from(1), BigInt::from(2)),
             n: BigInt::from(5),
-            h: BigInt::from(1)
+            h: BigInt::from(1),
         };
-        let curve = Curve::new(BigInt::from(2), BigInt::from(3), field, "testCurve".to_string());
+        let curve = Curve::new(
+            BigInt::from(2),
+            BigInt::from(3),
+            field,
+            "testCurve".to_string(),
+        );
 
         let result = Point::new(&curve, BigInt::from(94), BigInt::from(31));
 
@@ -41,9 +56,14 @@ mod tests {
             p: BigInt::from(97),
             g: (BigInt::from(1), BigInt::from(2)),
             n: BigInt::from(5),
-            h: BigInt::from(1)
+            h: BigInt::from(1),
         };
-        let curve = Curve::new(BigInt::from(2), BigInt::from(3), field, "testCurve".to_string());
+        let curve = Curve::new(
+            BigInt::from(2),
+            BigInt::from(3),
+            field,
+            "testCurve".to_string(),
+        );
 
         let p1 = Point::new(&curve, BigInt::from(22), BigInt::from(5)).unwrap();
         let inf = Point::inf(&curve);
@@ -58,9 +78,14 @@ mod tests {
             p: BigInt::from(97),
             g: (BigInt::from(1), BigInt::from(2)),
             n: BigInt::from(5),
-            h: BigInt::from(1)
+            h: BigInt::from(1),
         };
-        let curve = Curve::new(BigInt::from(2), BigInt::from(3), field, "testCurve".to_string());
+        let curve = Curve::new(
+            BigInt::from(2),
+            BigInt::from(3),
+            field,
+            "testCurve".to_string(),
+        );
 
         let p1 = Point::new(&curve, BigInt::from(24), BigInt::from(2)).unwrap();
         let expected = Point::new(&curve, BigInt::from(65), BigInt::from(65)).unwrap();
@@ -74,9 +99,14 @@ mod tests {
             p: BigInt::from(97),
             g: (BigInt::from(1), BigInt::from(2)),
             n: BigInt::from(5),
-            h: BigInt::from(1)
+            h: BigInt::from(1),
         };
-        let curve = Curve::new(BigInt::from(2), BigInt::from(3), field, "testCurve".to_string());
+        let curve = Curve::new(
+            BigInt::from(2),
+            BigInt::from(3),
+            field,
+            "testCurve".to_string(),
+        );
 
         let p1 = Point::new(&curve, BigInt::from(12), BigInt::from(3)).unwrap();
         let p2 = Point::new(&curve, BigInt::from(12), BigInt::from(94)).unwrap();
@@ -93,11 +123,19 @@ mod tests {
             n: BigInt::from(5),
             h: BigInt::from(1),
         };
-        let curve = Curve::new(BigInt::from(497), BigInt::from(1768), field, "testCurve".to_string());
+        let curve = Curve::new(
+            BigInt::from(497),
+            BigInt::from(1768),
+            field,
+            "testCurve".to_string(),
+        );
 
         let x = Point::new(&curve, BigInt::from(5323), BigInt::from(5438)).unwrap();
-        let expected =  Point::new(&curve, BigInt::from(1089), BigInt::from(6931)).unwrap();
-        assert_eq!(expected, Point::mul_double_and_add(&x, BigInt::from(1337)).unwrap())
+        let expected = Point::new(&curve, BigInt::from(1089), BigInt::from(6931)).unwrap();
+        assert_eq!(
+            expected,
+            Point::mul_double_and_add(&x, BigInt::from(1337)).unwrap()
+        )
     }
 
     #[test]
@@ -108,9 +146,14 @@ mod tests {
             n: BigInt::from(5),
             h: BigInt::from(1),
         };
-        let curve = Curve::new(BigInt::from(497), BigInt::from(1768), field, "testCurve".to_string());
+        let curve = Curve::new(
+            BigInt::from(497),
+            BigInt::from(1768),
+            field,
+            "testCurve".to_string(),
+        );
 
-        let expected =  Point::new(&curve, BigInt::from(1089), BigInt::from(6931)).unwrap();
+        let expected = Point::new(&curve, BigInt::from(1089), BigInt::from(6931)).unwrap();
         let x = Point::new(&curve, BigInt::from(5323), BigInt::from(5438)).unwrap();
         let k = BigInt::from(1337);
         let n = k.bits() as usize;

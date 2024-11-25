@@ -17,6 +17,5 @@ mod tests {
 
         let curve = result.unwrap();
         assert_eq!(curve_name, curve.name);
-        // assert_eq!(tiny_ec::curve::EC_CURVE_REGISTRY[curve_name].n, curve.field.n);
     }
 }
